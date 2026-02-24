@@ -1,0 +1,10 @@
+numpy==2.4.2
+scipy==1.17.1
+sounddevice==0.5.5
+faster-whisper==1.2.1
+transformers==4.44.0
+sentence-transformers==3.0.1
+faiss-cpu==1.8.0.post1
+torch==2.3.1
+pyannote.audio==3.0.1
+pyinstaller==6.8.1
