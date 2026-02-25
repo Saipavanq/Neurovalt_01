@@ -1,100 +1,136 @@
 # NeuroVault 🧠
 
-**AI-Powered Cognitive Storage Intelligence System**
-
-> Transforms passive file storage into a cognitive intelligence layer using vector embeddings, FAISS similarity indexing, cognitive scoring, memory lifecycle management, and explainable AI retrieval.
+**NeuroVault** is an AI-powered Cognitive Storage Intelligence System designed to transform passive digital storage into an active, searchable, and explainable intelligence layer. By leveraging state-of-the-art vector embeddings, efficient similarity indexing, and a custom cognitive scoring algorithm, NeuroVault manages your knowledge base as a living memory.
 
 ---
 
-## Architecture
+## 🚀 Key Features
 
-```
-File Upload → OCR/Parser → Chunking → Embedding (384-dim) → FAISS Index → Metadata Store
-User Query → Embed → FAISS Search → Cognitive Re-rank → Explainable Results
-```
-
-### Cognitive Scoring Formula
-```
-Score = 0.6 × Semantic Similarity
-      + 0.2 × Recency (e^(-λt))
-      + 0.2 × Access Frequency (log(1+count))
-```
-
-### Memory Lifecycle Tiers
-| Score | Tier | Storage |
-|-------|------|---------|
-| ≥ 0.75 | 🟢 Active | Hot |
-| 0.50–0.74 | 🔵 Contextual | Warm |
-| 0.25–0.49 | 🟠 Archived | Cold |
-| < 0.25 | ⚫ Dormant | Deep Archive |
+- **Semantic Intelligence**: Natural language search powered by `sentence-transformers` (384-dimensional embeddings).
+- **Cognitive Re-Ranking**: Documents are weighted based on semantic match, recency of access, and historical frequency.
+- **Explainable Retrieval**: Every search result includes a detailed AI-generated breakdown of *why* it was retrieved and how its score was calculated.
+- **Memory Lifecycle Management**: Documents automatically transition through four tiers (Active, Contextual, Archived, Dormant) based on their "cognitive importance" over time.
+- **Multi-Modal Parsing**: High-fidelity text extraction from PDF, DOCX, TXT, and images (OCR via Tesseract).
+- **Dynamic Visualization**: Interactive D3.js "Memory Constellation" graph and lifecycle analytics dashboard.
 
 ---
 
-## Quick Start
+## 🏗 Architecture
 
-### 1. Backend Setup
+```mermaid
+graph TD
+    subgraph Ingestion
+        A[File Upload] --> B[Parser Service]
+        B --> C[Text Chunking]
+        C --> D[Embedding Service]
+        D --> E[FAISS Index]
+    end
+    
+    subgraph Storage
+        E --> F[(SQLite/Metadata)]
+        E --> G[(FAISS Vector DB)]
+    end
+    
+    subgraph Intelligence
+        H[Search Query] --> I[Embedding Service]
+        I --> J[FAISS Search]
+        J --> K[Cognition Engine]
+        K --> L[Explainer Service]
+        L --> M[Explainable Results]
+    end
+```
 
+### The Cognitive Formula
+NeuroVault doesn't just look for words; it measures the "utility" of a memory:
+$$Score = (0.6 \times Semantic) + (0.2 \times Recency) + (0.2 \times AccessFrequency)$$
+
+---
+
+## 🛠 Tech Stack
+
+- **Backend**: Python 3.11+, FastAPI (High-performance API)
+- **AI/ML**: 
+  - `sentence-transformers`: Local CPU-based embedding generation
+  - `faiss-cpu`: High-speed similarity search indexing
+- **Database**: SQLAlchemy + SQLite (Metadata tracking)
+- **Frontend**: 
+  - React + Vite (Fast UX)
+  - TailwindCSS (Premium UI/UX)
+  - D3.js (Advanced visualizations)
+  - Framer Motion (Smooth animations)
+
+---
+
+## 📡 Quick Start
+
+### 1. Prerequisites
+- Python 3.11+
+- Node.js & npm
+- Tesseract OCR (Optional, for image parsing)
+
+### 2. Backend Installation
 ```bash
 cd backend
-
-# Create virtual environment
 python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # Linux/Mac
+# Windows:
+venv\Scripts\activate
+# Linux/Mac:
+# source venv/bin/activate
 
-# Install dependencies
+# Install dependencies (Optimized for Windows Wheels)
 pip install -r requirements.txt
 
-# Copy environment file
+# Configure environment
 copy .env.example .env
 
-# Start server
+# Run server
 uvicorn app.main:app --reload --port 8000
 ```
+*API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)*
 
-API docs: http://localhost:8000/docs
-
-### 2. Frontend Setup
-
+### 3. Frontend Installation
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
-
-App: http://localhost:5173
-
----
-
-## Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Backend | Python 3.11, FastAPI, SQLAlchemy |
-| Database | SQLite (local) / PostgreSQL |
-| AI/ML | sentence-transformers, FAISS-CPU |
-| Parser | PyPDF2, python-docx, pytesseract |
-| Frontend | React, Vite, TailwindCSS, D3.js |
+*Web App: [http://localhost:5173](http://localhost:5173)*
 
 ---
 
-## API Endpoints
+## 📂 Project Structure
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/api/documents/upload` | Upload & index document |
-| `GET` | `/api/documents/` | List documents |
-| `DELETE` | `/api/documents/{id}` | Delete document |
-| `POST` | `/api/search/` | Semantic search |
-| `GET` | `/api/analytics/` | Full analytics |
-| `GET` | `/api/analytics/lifecycle` | D3 lifecycle data |
-| `GET` | `/api/analytics/tiers` | Tier breakdown |
-| `GET` | `/health` | Health check |
+```text
+NeuroVault/
+├── backend/
+│   ├── app/
+│   │   ├── services/       # AI, FAISS, Cognition logic
+│   │   ├── routers/        # API Endpoints
+│   │   ├── models/         # Database ORM
+│   │   └── main.py         # App Entry Point
+│   └── requirements.txt
+└── frontend/
+    ├── src/
+    │   ├── components/     # UI Building Blocks
+    │   ├── pages/          # Core views (Dashboard, Search...)
+    │   └── utils/          # API & D3 Helpers
+    └── index.html
+```
 
 ---
 
-## Supported File Types
+## 👀 Usage Guide
 
-- **PDF** — text extraction via PyPDF2
-- **DOCX** — via python-docx
-- **TXT / MD / CSV** — direct UTF-8
-- **PNG / JPG / TIFF** — OCR via pytesseract
+1. **Ingest**: Use the **Upload** page to drop files. The system will parse and index them in real-time.
+2. **Search**: Enter concepts (e.g., "financial strategy" or "deep learning notes") in the **Search** page.
+3. **Understand**: Expand the **AI Explanation** on any result to see the score breakdown.
+4. **Monitor**: Visit the **Analytics** page to see your memory distribution across life-cycles.
+
+---
+
+## 🛡 License
+MIT License. Created for the future of decentralized cognitive intelligence.
+
+---
+
+*NeuroVault — Intelligence, Explained.*
