@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import Sidebar from './components/Sidebar'
+import ErrorBoundary from './components/ErrorBoundary'
 import Dashboard from './pages/Dashboard'
 import Upload from './pages/Upload'
 import Search from './pages/Search'
@@ -8,6 +9,7 @@ import Analytics from './pages/Analytics'
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <BrowserRouter>
       <div className="app-layout">
         <Sidebar />
@@ -33,5 +35,6 @@ export default function App() {
         }}
       />
     </BrowserRouter>
+    </ErrorBoundary>
   )
 }

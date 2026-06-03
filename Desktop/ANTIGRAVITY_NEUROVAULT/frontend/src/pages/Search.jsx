@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef } from 'react'
-import { semanticSearch, recordAccess } from '../utils/api'
+import { useState } from 'react'
+import { semanticSearch } from '../utils/api'
 import { Search as SearchIcon, Loader, Zap, Filter } from 'lucide-react'
 import TierBadge from '../components/TierBadge'
 import ExplainPanel from '../components/ExplainPanel'
@@ -98,7 +98,6 @@ export default function Search() {
     const [tier, setTier] = useState('All')
     const [k, setK] = useState(5)
     const [queryTime, setQueryTime] = useState(null)
-    const inputRef = useRef()
 
     const handleSearch = async (e) => {
         e?.preventDefault()
@@ -131,7 +130,6 @@ export default function Search() {
                 <div className="search-input-wrap" style={{ marginBottom: 14 }}>
                     <SearchIcon size={18} className="search-icon" />
                     <input
-                        ref={inputRef}
                         type="text"
                         className="search-input"
                         placeholder="Search by concept, idea, or context…"

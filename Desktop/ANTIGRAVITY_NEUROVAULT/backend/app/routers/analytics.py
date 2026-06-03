@@ -6,6 +6,7 @@ from app.database import get_db
 from app.models.document import Document
 from app.schemas.document import AnalyticsResponse, TierStats, DocumentResponse
 from app.services.cognition import cognition_engine, TIER_COLORS
+from app.config import settings
 
 router = APIRouter(prefix="/api/analytics", tags=["analytics"])
 
@@ -85,9 +86,9 @@ def lifecycle_data(
         "nodes": nodes,
         "histogram": histogram,
         "tier_thresholds": {
-            "active": 0.75,
-            "contextual": 0.50,
-            "archived": 0.25,
+            "active": settings.tier_active_threshold,
+            "contextual": settings.tier_contextual_threshold,
+            "archived": settings.tier_archived_threshold,
         },
     }
 

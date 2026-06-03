@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useDropzone } from 'react-dropzone'
 import toast from 'react-hot-toast'
 import { uploadDocument, listDocuments, deleteDocument } from '../utils/api'
@@ -8,21 +8,23 @@ import DocumentCard from '../components/DocumentCard'
 function UploadZone({ onUpload }) {
     const [uploading, setUploading] = useState(false)
     const [desc, setDesc] = useState('')
+    const descRef = useRef(desc)
+    useEffect(() => { descRef.current = desc }, [desc])
 
     const onDrop = useCallback(async (acceptedFiles) => {
         if (!acceptedFiles.length) return
         setUploading(true)
         for (const file of acceptedFiles) {
             try {
-                await uploadDocument(file, 'default_user', desc)
+                await uploadDocument(file, 'default_user', descRef.current)
                 toast.success(`✅ Uploaded: ${file.name}`, { style: { background: 'var(--bg-card)', color: 'var(--text-primary)' } })
-            } catch (e) {
+            } catch {
                 toast.error(`❌ Failed: ${file.name}`)
             }
         }
         setUploading(false)
         onUpload?.()
-    }, [desc, onUpload])
+    }, [onUpload])
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
@@ -99,7 +101,7 @@ export default function Upload() {
     const [docs, setDocs] = useState([])
     const [loading, setLoading] = useState(false)
 
-    const fetchDocs = async () => {
+    const fetchDocs = useCallback(async () => {
         setLoading(true)
         try {
             const res = await listDocuments()
@@ -108,7 +110,7 @@ export default function Upload() {
             toast.error('Failed to load documents')
         }
         setLoading(false)
-    }
+    }, [])
 
     const handleDelete = async (id) => {
         try {

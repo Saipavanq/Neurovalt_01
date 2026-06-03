@@ -34,9 +34,7 @@ class Settings(BaseSettings):
 
     @property
     def faiss_index_dir(self) -> Path:
-        p = Path(self.faiss_index_path)
-        p.mkdir(parents=True, exist_ok=True)
-        return p
+        return Path(self.faiss_index_path)
 
 
 settings = Settings()

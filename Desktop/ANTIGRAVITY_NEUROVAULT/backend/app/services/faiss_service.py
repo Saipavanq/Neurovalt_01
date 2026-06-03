@@ -17,15 +17,20 @@ class FaissService:
     """
 
     _instance: Optional["FaissService"] = None
+    _initialized: bool = False
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance._indexes: dict[str, faiss.IndexFlatIP] = {}
-            cls._instance._id_maps: dict[str, dict[int, str]] = {}  # faiss_id -> doc_id
-            cls._instance._counters: dict[str, int] = {}
-            cls._instance._index_dir: Optional[Path] = None
         return cls._instance
+
+    def __init__(self):
+        if not self._initialized:
+            self._indexes: dict[str, faiss.IndexFlatIP] = {}
+            self._id_maps: dict[str, dict[int, str]] = {}
+            self._counters: dict[str, int] = {}
+            self._index_dir: Optional[Path] = None
+            self._initialized = True
 
     def init(self, index_dir: Path):
         self._index_dir = index_dir
