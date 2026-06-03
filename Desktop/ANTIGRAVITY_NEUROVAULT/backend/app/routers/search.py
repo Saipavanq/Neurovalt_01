@@ -29,6 +29,8 @@ def semantic_search(req: SearchRequest, db: Session = Depends(get_db)):
 
     # 1. Embed the query
     query_vec = embedding_service.encode_single(req.query)
+    if query_vec is None or query_vec.size == 0:
+        raise HTTPException(status_code=500, detail="Failed to embed query")
 
     # 2. FAISS vector similarity search
     raw_results = faiss_service.search(req.user_id, query_vec, k=req.k * 3)

@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.document import Document
+from app.models.access_log import AccessLog
 from app.schemas.document import DocumentResponse, DocumentDetail
 from app.services.embedding_service import embedding_service
 from app.services.faiss_service import faiss_service
@@ -152,6 +153,16 @@ def record_access(
     new_score = cognition_engine.compute_storage_score(doc.last_accessed, doc.access_count)
     doc.cognitive_score = new_score
     doc.tier = cognition_engine.classify_tier(new_score)
+
+    log = AccessLog(
+        document_id=doc_id,
+        user_id=doc.user_id,
+        accessed_at=doc.last_accessed,
+        query_used=query_used,
+        relevance_score=relevance_score,
+        access_type="direct",
+    )
+    db.add(log)
     db.commit()
     return {"status": "ok", "cognitive_score": new_score, "tier": doc.tier}
 

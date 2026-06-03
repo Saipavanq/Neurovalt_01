@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import * as d3 from 'd3'
 import { getAnalytics, getLifecycleData } from '../utils/api'
-import { TIER_COLORS } from '../components/TierBadge'
+import { TIER_COLORS } from '../utils/tiers'
 import TierBadge from '../components/TierBadge'
 import { Files, Brain, TrendingUp, Layers, Loader } from 'lucide-react'
 
@@ -59,17 +59,21 @@ function ForceGraph({ nodes }) {
             .style('pointer-events', 'none')
 
         // Tooltip
-        const tooltip = d3.select('body').append('div')
-            .style('position', 'absolute')
-            .style('background', 'rgba(13,21,37,0.95)')
-            .style('border', '1px solid rgba(0,212,255,0.3)')
-            .style('border-radius', '8px')
-            .style('padding', '8px 12px')
-            .style('font-size', '12px')
-            .style('color', '#f0f4ff')
-            .style('pointer-events', 'none')
-            .style('opacity', 0)
-            .style('z-index', 9999)
+        let tooltip = d3.select('body').select('div.neurovault-tooltip')
+        if (tooltip.empty()) {
+            tooltip = d3.select('body').append('div')
+                .attr('class', 'neurovault-tooltip')
+                .style('position', 'absolute')
+                .style('background', 'rgba(13,21,37,0.95)')
+                .style('border', '1px solid rgba(0,212,255,0.3)')
+                .style('border-radius', '8px')
+                .style('padding', '8px 12px')
+                .style('font-size', '12px')
+                .style('color', '#f0f4ff')
+                .style('pointer-events', 'none')
+                .style('opacity', 0)
+                .style('z-index', 9999)
+        }
 
         node
             .on('mouseover', (event, d) => {
@@ -90,7 +94,7 @@ function ForceGraph({ nodes }) {
 
         return () => {
             sim.stop()
-            tooltip.remove()
+            d3.select('body').select('div.neurovault-tooltip').remove()
         }
     }, [nodes])
 
@@ -113,11 +117,13 @@ export default function Dashboard() {
             .finally(() => setLoading(false))
     }, [])
 
-    const graphNodes = lifecycle?.nodes?.map(n => ({
-        ...n,
-        r: 8 + n.score * 20,
-        color: TIER_COLORS[n.tier] || '#888',
-    })) || []
+    const graphNodes = useMemo(() => (
+        lifecycle?.nodes?.map(n => ({
+            ...n,
+            r: 8 + n.score * 20,
+            color: TIER_COLORS[n.tier] || '#888',
+        })) || []
+    ), [lifecycle?.nodes])
 
     if (loading) return (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 400, gap: 12, color: 'var(--text-muted)' }}>

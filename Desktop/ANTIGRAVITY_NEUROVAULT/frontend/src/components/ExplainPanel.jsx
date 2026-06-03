@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react'
-import { TIER_COLORS } from './TierBadge'
+import { TIER_COLORS } from '../utils/tiers'
 import TierBadge from './TierBadge'
 import { Info } from 'lucide-react'
 
-function ScoreBar({ label, value, color, weight }) {
+function ScoreBar({ label, value, color }) {
     return (
         <div className="score-bar-row">
             <span className="score-bar-label">{label}</span>
@@ -33,7 +32,6 @@ export default function ExplainPanel({ breakdown }) {
         explanation,
     } = breakdown
 
-    const tierColor = TIER_COLORS[tier] || '#888'
     const scoreColor = final_score >= 0.75 ? '#00ff88'
         : final_score >= 0.50 ? '#00d4ff'
             : final_score >= 0.25 ? '#ff9500'

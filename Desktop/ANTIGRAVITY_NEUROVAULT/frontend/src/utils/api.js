@@ -6,6 +6,18 @@ const api = axios.create({
     headers: { 'Content-Type': 'application/json' },
 })
 
+api.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response) {
+            console.error(`API ${error.response.status} on ${error.config.url}:`, error.response.data)
+        } else if (error.request) {
+            console.error('API no response:', error.message)
+        }
+        return Promise.reject(error)
+    }
+)
+
 // ── Documents ──────────────────────────────────────
 export const uploadDocument = (file, userId = 'default_user', description = '') => {
     const form = new FormData()

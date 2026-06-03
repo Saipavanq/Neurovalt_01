@@ -1,7 +1,7 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import {
     Brain, LayoutDashboard, Upload, Search,
-    BarChart3, Zap, Github
+    BarChart3, Zap,
 } from 'lucide-react'
 
 const NAV = [
@@ -37,17 +37,20 @@ export default function Sidebar() {
                 <div style={{ padding: '8px 16px 6px', fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                     Navigation
                 </div>
-                {NAV.map(({ path, label, icon: Icon }) => (
-                    <NavLink
-                        key={path}
-                        to={path}
-                        end={path === '/'}
-                        className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-                    >
-                        <Icon size={16} />
-                        {label}
-                    </NavLink>
-                ))}
+                {NAV.map((item) => {
+                    const ItemIcon = item.icon
+                    return (
+                        <NavLink
+                            key={item.path}
+                            to={item.path}
+                            end={item.path === '/'}
+                            className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+                        >
+                            <ItemIcon size={16} />
+                            {item.label}
+                        </NavLink>
+                    )
+                })}
             </nav>
 
             {/* Footer */}

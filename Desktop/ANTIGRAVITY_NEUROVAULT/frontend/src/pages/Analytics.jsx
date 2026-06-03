@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import { getLifecycleData, getTierSummary } from '../utils/api'
-import { TIER_COLORS } from '../components/TierBadge'
+import { TIER_COLORS } from '../utils/tiers'
 import { Layers, Loader } from 'lucide-react'
 
 // ── D3 Tier Bar Chart ──────────────────────────────────────
